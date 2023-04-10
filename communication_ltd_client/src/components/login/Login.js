@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate  } from 'react-router-dom';
 import './Login.css';
 
 const Login = () => {
@@ -7,6 +8,8 @@ const Login = () => {
     password: '',
   });
 
+  const navigate = useNavigate ();
+
   const handleChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
@@ -14,6 +17,10 @@ const Login = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log(formData); // Replace with your own authentication logic
+  };
+
+  const handleRegister = () => {
+    navigate("/register");
   };
 
   return (
@@ -41,7 +48,12 @@ const Login = () => {
           required
         />
       </div>
-      <button type="submit">Submit</button>
+      <div className="form-group">
+        <button type="submit">Submit</button>
+        <button type="button" onClick={handleRegister}>
+          Register
+        </button>
+      </div>
     </form>
   );
 };
