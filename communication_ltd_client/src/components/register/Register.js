@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate  } from 'react-router-dom';
 import './Register.css';
 
 const Register = () => {
@@ -9,6 +10,7 @@ const Register = () => {
     password: '',
     confirmPassword: '',
   });
+  const navigate = useNavigate ();
 
   const handleChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
@@ -16,7 +18,12 @@ const Register = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(formData); // Replace with your own submission logic
+    console.log(formData); // Replace with your own registration logic
+    navigate("/login");
+  };
+
+  const handleLogin = () => {
+    navigate("/login");
   };
 
   return (
@@ -77,7 +84,12 @@ const Register = () => {
           required
         />
       </div>
-      <button type="submit">Submit</button>
+      <div className="form-group">
+        <button type="submit">Submit</button>
+        <button type="button" onClick={handleLogin}>
+          Login
+        </button>
+      </div>
     </form>
   );
 };
