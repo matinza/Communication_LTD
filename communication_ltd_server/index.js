@@ -1,17 +1,29 @@
 const express = require("express")
 const app = express()
-const port = 4000
 const cors = require("cors")
+const db = require('./db/index');
 
-app.use(express.urlencoded({
-  extended: true
-}))
+const port = 4000
 
 app.use(express.json())
 app.use(cors())
 
-app.get("/", cors(), async (req, res) => {
-  res.send("This is working")
+db.connectCommunication_LTD_DB()
+
+app.get("/register", cors(), async (req, res) => {
+  result = db.query(`INSERT INTO users 
+                        (first_name,
+                         last_name,
+                         company_id) VALUES
+                         ('${req.first_name}',
+                          '${req.last_name}',
+                           '${req.email}')`);
+
+  result.then(() => {
+    res.status(200).json({
+      answer: "success"
+    })
+  })
 })
 
 app.listen(port, () => {
