@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
-import { useNavigate  } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './Login.css';
 
-const Login = () => {
+const LoginForm = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
-
-  const navigate = useNavigate ();
+  const navigate = useNavigate();
 
   const handleChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
@@ -20,7 +19,11 @@ const Login = () => {
   };
 
   const handleRegister = () => {
-    navigate("/register");
+    navigate('/register');
+  };
+
+  const handleForgotPassword = () => {
+    navigate('/forgotPassword');
   };
 
   return (
@@ -49,13 +52,16 @@ const Login = () => {
         />
       </div>
       <div className="form-group">
-        <button type="submit">Submit</button>
+        <button type="submit">Login</button>
         <button type="button" onClick={handleRegister}>
           Register
+        </button>
+        <button type="button" onClick={handleForgotPassword}>
+          Forgot Password
         </button>
       </div>
     </form>
   );
 };
 
-export default Login;
+export default LoginForm;
