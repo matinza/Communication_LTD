@@ -1,5 +1,5 @@
 -- Create a new database named Communication_LTD
-CREATE DATABASE Communication_LTD;
+CREATE DATABASE "Communication_LTD";
 
 -- Create a new table named users
 CREATE TABLE users (
