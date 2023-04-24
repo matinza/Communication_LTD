@@ -11,3 +11,5 @@ CREATE TABLE users (
   phone VARCHAR(20) NOT NULL,
   address VARCHAR(255) NOT NULL
 );
+
+nothing to commit 
