@@ -18,6 +18,10 @@ const LoginForm = () => {
     console.log(formData); // Replace with your own authentication logic
   };
 
+  const handleLogin = () =>{
+    // send to server the details and login if success or failure
+  }
+
   const handleRegister = () => {
     navigate('/register');
   };
@@ -52,7 +56,7 @@ const LoginForm = () => {
         />
       </div>
       <div className="form-group">
-        <button type="submit">Login</button>
+        <button type="submit" onClick={handleLogin}>Login</button>
         <button type="button" onClick={handleRegister}>
           Register
         </button>

@@ -11,17 +11,27 @@ app.use(cors())
 db.connectCommunication_LTD_DB()
 
 app.get("/register", cors(), async (req, res) => {
-  result = db.query(`INSERT INTO users 
-                        (first_name,
-                         last_name,
-                         company_id) VALUES
-                         ('${req.first_name}',
-                          '${req.last_name}',
-                           '${req.email}')`);
+  result = db.query(`INSERT INTO users
+                     (first_name,
+                      last_name,
+                      email,
+                      password,
+                      phone,
+                      address) VALUES
+                      ('${req.body.first_name}',
+                       '${req.body.last_name}',
+                       '${req.body.email}',
+                       '${req.body.password}',
+                       '${req.body.phone}',
+                       '${req.body.address}')`);
 
   result.then(() => {
     res.status(200).json({
       answer: "success"
+    })
+  }).catch((error) => {
+    res.status(500).json({
+      answer: "failure" + error
     })
   })
 })
