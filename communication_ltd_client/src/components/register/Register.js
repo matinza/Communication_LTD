@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { useNavigate  } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import './Register.css';
 
 const Register = () => {
@@ -10,7 +11,7 @@ const Register = () => {
     password: '',
     confirmPassword: '',
   });
-  const navigate = useNavigate ();
+  const navigate = useNavigate();
 
   const handleChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
@@ -18,12 +19,24 @@ const Register = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(formData); // Replace with your own registration logic
-    navigate("/login");
+
+    axios.post('http://localhost:4000/register', formData, {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(response => {
+      if (response.status !== 200) {
+        throw new Error(response.data.message);
+      }
+      navigate('/login');
+    }).catch(error => {
+      console.error('Registration error:', error);
+    });
   };
 
   const handleLogin = () => {
-    navigate("/login");
+    navigate('/login');
   };
 
   return (

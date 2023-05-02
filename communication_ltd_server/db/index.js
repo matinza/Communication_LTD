@@ -1,27 +1,26 @@
-const dbConfig = require('../config/Communication_LTD_DBConfig');
 const {
   Client
 } = require('pg');
 var colors = require('colors');
 var myClient = null;
+require('dotenv').config()
 
 connectCommunication_LTD_DB = () => {
   return new Promise((resolve, reject) => {
     try {
-      const dbDetails = dbConfig.DATABASE_CONNECTION_DETAILS();
       const client = new Client({
-        host: dbDetails.host,
-        user: dbDetails.user,
-        port: dbDetails.port,
-        password: dbDetails.password,
-        database: dbDetails.database,
+        host: process.env.HOST,
+        user: process.env.USER,
+        port: process.env.PORT,
+        password: process.env.PASSWORD,
+        database: process.env.DATABASE,
       });
 
       client.connect(function (err) {
         if (err) {
-          console.log('err===> '+err);
+          console.log('err===> ' + err);
           throw err;
-        }else{
+        } else {
           myClient = client;
           console.log(colors.green(`SUCCESS: connected to Communication_LTD database!`));
         }
