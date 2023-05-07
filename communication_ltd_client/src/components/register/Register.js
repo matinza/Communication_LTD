@@ -19,11 +19,11 @@ const Register = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
-    axios.post('http://localhost:4000/register', formData, {
+    
+    axios.post('https://localhost:4000/register', formData, {
       withCredentials: true,
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json;charset=UTF-8'
       }
     }).then(response => {
       if (response.status !== 200) {

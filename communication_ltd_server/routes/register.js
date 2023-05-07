@@ -6,16 +6,13 @@ const nodemailer = require('nodemailer');
 const config = require('../config/index');
 
 router.post('/', (req, res) => {
-  log('got here <=================================================================')
-  log('got here <=================================================================')
-  log('got here <=================================================================')
-  const { first_name, last_name, email, password, phone, address } = req.body;
+  const { firstName, lastName, email, password } = req.body;
 
   // Check if required fields are present
-  if (!first_name || !last_name || !email || !password || !phone || !address) {
+  if (!firstName || !lastName || !email || !password) {
     return res.status(400).json({ message: 'Missing required fields' });
   }
-
+  
   // Validate password complexity
   const passwordLength = config.passwordLength;
   const passwordComplexity = config.passwordComplexity;
@@ -30,11 +27,12 @@ router.post('/', (req, res) => {
   const hasLowercase = /[a-z]/.test(password);
   const hasNumber = /[0-9]/.test(password);
   const hasSpecialChar = /[!@#$%^&*]/.test(password);
-
+  
   if (passwordComplexity.uppercase && !hasUppercase) {
     return res.status(400).json({ message: 'Password must contain at least one uppercase letter' });
   }
-
+  
+  console.log('got here == > '+ firstName, lastName, email, password);
   if (passwordComplexity.lowercase && !hasLowercase) {
     return res.status(400).json({ message: 'Password must contain at least one lowercase letter' });
   }
@@ -46,14 +44,13 @@ router.post('/', (req, res) => {
   if (passwordComplexity.specialCharacters && !hasSpecialChar) {
     return res.status(400).json({ message: 'Password must contain at least one special character' });
   }
-
+  
   if (passwordDictionary.some((word) => password.toLowerCase().includes(word))) {
     return res.status(400).json({ message: 'Password cannot contain commonly used words' });
   }
-
   // Generate salt for password hashing
   const salt = crypto.randomBytes(16).toString('hex');
-
+  
   // Hash password with HMAC + salt
   const hmac = crypto.createHmac('sha512', salt);
   hmac.update(password);
@@ -65,11 +62,9 @@ router.post('/', (req, res) => {
             last_name,
             email,
             password,
-            phone,
-            address,
             salt) VALUES
-            ($1, $2, $3, $4, $5, $6, $7)`,
-           [first_name, last_name, email, hashedPassword, phone, address, salt])
+            ($1, $2, $3, $4, $5)`,
+           [firstName, lastName, email, hashedPassword, salt])
     .then(() => {
       // Send confirmation email
       const transporter = nodemailer.createTransport(config.emailTransport);

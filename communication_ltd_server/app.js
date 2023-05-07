@@ -6,7 +6,6 @@ const registerRoute = require('./routes/register');
 const app = express();
 
 app.use(express.json());
-app.use(cors());
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
@@ -14,8 +13,13 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(cors({
+  origin: "https://localhost:3000",
+  credentials: true
+}));
+
 db.connectCommunication_LTD_DB();
 
-app.use('/register', registerRoute);
+app.use('/register', registerRoute)
 
 module.exports = app;
