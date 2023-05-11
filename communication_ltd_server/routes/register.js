@@ -6,13 +6,20 @@ const nodemailer = require('nodemailer');
 const config = require('../config/index');
 
 router.post('/', (req, res) => {
-  const { firstName, lastName, email, password } = req.body;
+  const {
+    firstName,
+    lastName,
+    email,
+    password
+  } = req.body;
 
   // Check if required fields are present
   if (!firstName || !lastName || !email || !password) {
-    return res.status(400).json({ message: 'Missing required fields' });
+    return res.status(400).json({
+      message: 'Missing required fields'
+    });
   }
-  
+
   // Validate password complexity
   const passwordLength = config.passwordLength;
   const passwordComplexity = config.passwordComplexity;
@@ -20,37 +27,48 @@ router.post('/', (req, res) => {
   const passwordHistory = config.passwordHistory;
 
   if (password.length < passwordLength) {
-    return res.status(400).json({ message: `Password must be at least ${passwordLength} characters long` });
+    return res.status(400).json({
+      message: `Password must be at least ${passwordLength} characters long`
+    });
   }
 
   const hasUppercase = /[A-Z]/.test(password);
   const hasLowercase = /[a-z]/.test(password);
   const hasNumber = /[0-9]/.test(password);
   const hasSpecialChar = /[!@#$%^&*]/.test(password);
-  
+
   if (passwordComplexity.uppercase && !hasUppercase) {
-    return res.status(400).json({ message: 'Password must contain at least one uppercase letter' });
+    return res.status(400).json({
+      message: 'Password must contain at least one uppercase letter'
+    });
   }
-  
-  console.log('got here == > '+ firstName, lastName, email, password);
+
   if (passwordComplexity.lowercase && !hasLowercase) {
-    return res.status(400).json({ message: 'Password must contain at least one lowercase letter' });
+    return res.status(400).json({
+      message: 'Password must contain at least one lowercase letter'
+    });
   }
 
   if (passwordComplexity.numbers && !hasNumber) {
-    return res.status(400).json({ message: 'Password must contain at least one number' });
+    return res.status(400).json({
+      message: 'Password must contain at least one number'
+    });
   }
 
   if (passwordComplexity.specialCharacters && !hasSpecialChar) {
-    return res.status(400).json({ message: 'Password must contain at least one special character' });
+    return res.status(400).json({
+      message: 'Password must contain at least one special character'
+    });
   }
-  
+
   if (passwordDictionary.some((word) => password.toLowerCase().includes(word))) {
-    return res.status(400).json({ message: 'Password cannot contain commonly used words' });
+    return res.status(400).json({
+      message: 'Password cannot contain commonly used words'
+    });
   }
   // Generate salt for password hashing
   const salt = crypto.randomBytes(16).toString('hex');
-  
+
   // Hash password with HMAC + salt
   const hmac = crypto.createHmac('sha512', salt);
   hmac.update(password);
@@ -64,7 +82,7 @@ router.post('/', (req, res) => {
             password,
             salt) VALUES
             ($1, $2, $3, $4, $5)`,
-           [firstName, lastName, email, hashedPassword, salt])
+      [firstName, lastName, email, hashedPassword, salt])
     .then(() => {
       // Send confirmation email
       const transporter = nodemailer.createTransport(config.emailTransport);
@@ -83,11 +101,15 @@ router.post('/', (req, res) => {
       });
 
       // Return success response
-      res.json({ message: 'User registered successfully' });
+      res.json({
+        message: 'User registered successfully'
+      });
     })
     .catch((error) => {
       console.error('Database error:', error);
-      res.status(500).json({ message: 'Internal server error' });
+      res.status(500).json({
+        message: 'Internal server error'
+      });
     });
 });
 

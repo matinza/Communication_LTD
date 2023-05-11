@@ -14,8 +14,8 @@ module.exports = {
     port: 465,
     secure: true,
     auth: {
-      user: 'example@gmail.com',
-      pass: 'password'
+      user: 'communicationltd8@gmail.com',
+      pass: 'zoantefcwcxodgfc'
     }
   },
   emailFrom: 'noreply@example.com'
