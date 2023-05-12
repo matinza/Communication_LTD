@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './Register.css';
 
 const Register = () => {
@@ -19,19 +21,25 @@ const Register = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    
+    const { password, confirmPassword } = formData;
+    if (password !== confirmPassword) {
+      toast.error('Password and confirm password do not match');
+      return;
+    }
+
     axios.post('https://localhost:4000/register', formData, {
       withCredentials: true,
       headers: {
         'Content-Type': 'application/json;charset=UTF-8'
       }
     }).then(response => {
-      if (response.status !== 200) {
-        throw new Error(response.data.message);
-      }
-      navigate('/login');
+        toast.success(`${response.data.message}, redirecting to login page`);
+        setTimeout(() => {
+          navigate('/login');  
+        }, 5000);              
     }).catch(error => {
-      console.error('Registration error:', error);
+      console.error('Registration error', error.response.data.message);
+      toast.error(`Registration error: ${error.response.data.message}`);
     });
   };
 
@@ -103,6 +111,7 @@ const Register = () => {
           Login
         </button>
       </div>
+      <ToastContainer />
     </form>
   );
 };

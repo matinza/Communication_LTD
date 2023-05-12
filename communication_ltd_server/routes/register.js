@@ -5,7 +5,7 @@ const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const config = require('../config/index');
 
-router.post('/', (req, res) => {
+router.post('/', (req, res, next) => {
   const {
     firstName,
     lastName,
@@ -19,13 +19,13 @@ router.post('/', (req, res) => {
       message: 'Missing required fields'
     });
   }
-
+  
   // Validate password complexity
   const passwordLength = config.passwordLength;
   const passwordComplexity = config.passwordComplexity;
   const passwordDictionary = config.passwordDictionary;
   const passwordHistory = config.passwordHistory;
-
+  
   if (password.length < passwordLength) {
     return res.status(400).json({
       message: `Password must be at least ${passwordLength} characters long`
@@ -101,7 +101,7 @@ router.post('/', (req, res) => {
       });
 
       // Return success response
-      res.json({
+      res.status(200).json({
         message: 'User registered successfully'
       });
     })
