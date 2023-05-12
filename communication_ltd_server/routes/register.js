@@ -19,13 +19,22 @@ router.post('/', (req, res, next) => {
       message: 'Missing required fields'
     });
   }
-  
+
+  // Check if user already exists
+  db.query('SELECT * FROM users WHERE email = $1', [email])
+    .then((result) => {
+      if (result.rows.length > 0) {
+        return res.status(400).json({
+          message: 'User already exists'
+        });
+      }
+    })
+
   // Validate password complexity
   const passwordLength = config.passwordLength;
   const passwordComplexity = config.passwordComplexity;
   const passwordDictionary = config.passwordDictionary;
-  const passwordHistory = config.passwordHistory;
-  
+
   if (password.length < passwordLength) {
     return res.status(400).json({
       message: `Password must be at least ${passwordLength} characters long`
