@@ -5,6 +5,14 @@ const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const config = require('../config/index');
 
+// Email validation regular expression
+// The email address can contain alphanumeric characters, special characters (.!#$%&'*+/=?^_{|}~-), and dots (.`) within the local part.
+// The local part must be followed by the @ symbol.
+// The domain part can contain alphanumeric characters and hyphens (-).
+// The domain can have multiple segments separated by dots (.).
+// The pattern allows for top-level domains (TLDs) with multiple segments, such as .co.uk.
+const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
 router.post('/', (req, res, next) => {
   const {
     firstName,
@@ -17,6 +25,13 @@ router.post('/', (req, res, next) => {
   if (!firstName || !lastName || !email || !password) {
     return res.status(400).json({
       message: 'Missing required fields'
+    });
+  }
+
+  // Check if email is a valid email address
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({
+      message: 'Invalid email address'
     });
   }
 

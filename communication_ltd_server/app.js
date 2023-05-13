@@ -2,6 +2,7 @@ const express = require("express")
 const cors = require("cors")
 const db = require('./db');
 const registerRoute = require('./routes/register');
+const loginRoute = require('./routes/login');
 
 const app = express();
 
@@ -21,5 +22,6 @@ app.use(cors({
 db.connectCommunication_LTD_DB();
 
 app.use('/register', registerRoute)
+// app.use('/login', loginRoute)
 
 module.exports = app;
