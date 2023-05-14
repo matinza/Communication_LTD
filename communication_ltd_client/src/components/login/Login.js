@@ -23,7 +23,7 @@ const LoginForm = () => {
       withCredentials: true,
       headers: {
         'Content-Type': 'application/json;charset=UTF-8'
-      }
+      },
     }).then(response => {
         toast.success(`${response.data.message}, redirecting to system page`);
         setTimeout(() => {

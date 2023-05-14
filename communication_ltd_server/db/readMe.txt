@@ -10,3 +10,9 @@ CREATE TABLE users (
   password TEXT NOT NULL,
   salt TEXT NOT NULL
 );
+
+-- add login attempts to users table
+ALTER TABLE users ADD COLUMN login_attempts INTEGER DEFAULT 0;
+
+-- add last login attempt time to users table
+ALTER TABLE users ADD COLUMN last_login_attempt timestamp;
