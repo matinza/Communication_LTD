@@ -55,8 +55,8 @@ router.post('/', (req, res) => {
       if (login_attempts >= config.loginAttempts) {
         // Calculate the time difference in minutes
         const now = moment();
-        const lastAttemptTime = moment(last_login_attempt);
-        const diffInMinutes = now.diff(lastAttemptTime, 'minutes');
+        const lastAttemptTime = moment(last_login_attempt, 'YYYY-MM-DD HH:mm:ss');
+        const diffInMinutes = moment.duration(now.diff(lastAttemptTime)).asMinutes();
 
         // Check if the time difference is less than 30 minutes
         if (diffInMinutes < 30) {
@@ -79,6 +79,11 @@ router.post('/', (req, res) => {
 
       // Compare the hashed entered password with the stored hashed password
       if (hashedEnteredPassword !== hashedPassword) {
+        const now = moment().format('YYYY-MM-DD HH:mm:ss');
+        db.query('UPDATE users SET login_attempts = $1, last_login_attempt = $2 WHERE email = $3', [login_attempts + 1, now, email])
+          .catch((error) => {
+            console.error('Database error:', error);
+          });
         return res.status(401).json({
           message: 'The email or the password are wrong'
         });
