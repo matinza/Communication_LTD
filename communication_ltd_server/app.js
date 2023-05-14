@@ -22,6 +22,6 @@ app.use(cors({
 db.connectCommunication_LTD_DB();
 
 app.use('/register', registerRoute)
-// app.use('/login', loginRoute)
+app.use('/login', loginRoute)
 
 module.exports = app;

@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './Login.css';
 
 const LoginForm = () => {
@@ -15,11 +18,21 @@ const LoginForm = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(formData); // Replace with your own authentication logic
-  };
 
-  const handleLogin = () =>{
-    // send to server the details and login if success or failure
+    axios.post('https://localhost:4000/login', formData, {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8'
+      }
+    }).then(response => {
+        toast.success(`${response.data.message}, redirecting to system page`);
+        setTimeout(() => {
+          navigate('/system');  
+        }, 5000);              
+    }).catch(error => {
+      console.error('login error', error.response.data.message);
+      toast.error(`login error: ${error.response.data.message}`);
+    });
   }
 
   const handleRegister = () => {
@@ -56,7 +69,7 @@ const LoginForm = () => {
         />
       </div>
       <div className="form-group">
-        <button type="submit" onClick={handleLogin}>Login</button>
+        <button type="submit">Login</button>
         <button type="button" onClick={handleRegister}>
           Register
         </button>
@@ -64,6 +77,7 @@ const LoginForm = () => {
           Forgot Password
         </button>
       </div>
+      <ToastContainer />
     </form>
   );
 };

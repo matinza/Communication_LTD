@@ -13,7 +13,7 @@ const config = require('../config/index');
 // The pattern allows for top-level domains (TLDs) with multiple segments, such as .co.uk.
 const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
-router.post('/', (req, res, next) => {
+router.post('/', (req, res) => {
   const {
     firstName,
     lastName,
