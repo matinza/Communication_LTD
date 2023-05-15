@@ -45,6 +45,7 @@ router.post('/', (req, res) => {
 
       const user = result.rows[0];
       const {
+        id,
         salt,
         password: hashedPassword,
         login_attempts,
@@ -96,17 +97,24 @@ router.post('/', (req, res) => {
           console.error('Database error:', error);
         });
 
-      // Return success response
-      res.status(200).json({
-        message: 'Login successful'
-        // message: 'Login successful',
-        // user: {
-        //   id: user.id,
-        //   email: user.email,
-        //   firstName: user.first_name,
-        //   lastName: user.last_name
-        // }
-      });
+      // generate token
+      payload = {
+        userId: id,
+        userEmail: email
+      }
+
+      generateAccessToken(payload).then((token) => {
+        // Return success response
+        res.status(200).json({
+          message: 'Login successful',
+          token: token
+        });
+      }).catch((error) => {
+        console.log('error durign token creation => ', error);
+        res.status(500).json({
+          message: 'Internal server error'
+        });
+      })
     })
     .catch((error) => {
       console.error('Database error:', error);

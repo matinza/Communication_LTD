@@ -1,8 +1,12 @@
 const express = require("express")
 const cors = require("cors")
 const db = require('./db');
+const {
+  verifyToken
+} = require('./jwt/index')
 const registerRoute = require('./routes/register');
 const loginRoute = require('./routes/login');
+const systemRoute = require('./routes/system');
 
 const app = express();
 
@@ -23,5 +27,6 @@ db.connectCommunication_LTD_DB();
 
 app.use('/register', registerRoute)
 app.use('/login', loginRoute)
+app.use('/system', verifyToken ,systemRoute)
 
 module.exports = app;

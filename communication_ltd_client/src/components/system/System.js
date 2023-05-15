@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './System.css';
 
 const System = () => {
@@ -19,7 +22,23 @@ const System = () => {
     event.preventDefault();
     const { firstName, lastName } = formData;
     setNewCustomerName(`${firstName} ${lastName}`);
-    console.log(formData); // Replace with your own submission logic
+    
+    const token = localStorage.getItem('token');
+    axios.post('https://localhost:4000/system', formData, {
+      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json;charset=UTF-8'
+      }
+    }).then(response => {
+        toast.success(`${response.data.message}, redirecting to login page`);
+        // setTimeout(() => {
+        //   navigate('/login');  
+        // }, 5000);              
+    }).catch(error => {
+      console.error('system error', error.response.data.message);
+      toast.error(`system error: ${error.response.data.message}`);
+    })
   };
 
   return (
@@ -81,6 +100,7 @@ const System = () => {
           ></textarea>
         </div>
         <button type="submit">Add client</button>
+        <ToastContainer />
       </form>
       {newCustomerName && (
         <div className="customer-name">

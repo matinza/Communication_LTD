@@ -16,3 +16,13 @@ ALTER TABLE users ADD COLUMN login_attempts INTEGER DEFAULT 0;
 
 -- add last login attempt time to users table
 ALTER TABLE users ADD COLUMN last_login_attempt timestamp;
+
+-- create  new table of clients
+CREATE TABLE clients (
+  id SERIAL PRIMARY KEY,
+  first_name VARCHAR(50) NOT NULL,
+  last_name VARCHAR(50) NOT NULL,
+  email VARCHAR(100) UNIQUE NOT NULL,
+  phone VARCHAR(50) UNIQUE NOT NULL,
+	address VARCHAR(250) NOT NULL
+);

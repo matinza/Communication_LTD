@@ -25,7 +25,9 @@ const LoginForm = () => {
         'Content-Type': 'application/json;charset=UTF-8'
       },
     }).then(response => {
-        toast.success(`${response.data.message}, redirecting to system page`);
+      toast.success(`${response.data.message}, redirecting to system page`);
+      saveTokenToLocalStorage(response.data.token);
+
         setTimeout(() => {
           navigate('/system');  
         }, 5000);              
@@ -41,6 +43,10 @@ const LoginForm = () => {
 
   const handleForgotPassword = () => {
     navigate('/forgotPassword');
+  };
+
+  const saveTokenToLocalStorage = (token) => {
+    localStorage.setItem('token', token);
   };
 
   return (
