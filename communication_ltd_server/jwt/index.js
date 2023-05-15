@@ -30,7 +30,7 @@ verifyToken = (req, res, next) => {
   jwt.verify(token, process.env.TOKEN_SECRET_KEY, (err, decodedToken) => {
     if (err) {
       return res.status(401).json({
-        error: 'Invalid or expired token'
+        message: 'Invalid or expired token'
       })
     }else{}
     req.user = decodedToken

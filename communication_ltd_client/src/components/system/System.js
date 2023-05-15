@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -13,6 +14,7 @@ const System = () => {
     address: '',
   });
   const [newCustomerName, setNewCustomerName] = useState('');
+  const navigate = useNavigate();
 
   const handleChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
@@ -23,7 +25,9 @@ const System = () => {
     const { firstName, lastName } = formData;
     setNewCustomerName(`${firstName} ${lastName}`);
     
+    //Get the token
     const token = localStorage.getItem('token');
+
     axios.post('https://localhost:4000/system', formData, {
       withCredentials: true,
       headers: {
@@ -31,13 +35,16 @@ const System = () => {
         'Content-Type': 'application/json;charset=UTF-8'
       }
     }).then(response => {
-        toast.success(`${response.data.message}, redirecting to login page`);
-        // setTimeout(() => {
-        //   navigate('/login');  
-        // }, 5000);              
+        toast.success(`${response.data.message}`);
     }).catch(error => {
-      console.error('system error', error.response.data.message);
-      toast.error(`system error: ${error.response.data.message}`);
+      if(error.response.data.message === "Invalid or expired token"){
+        toast.error(`system error: ${error.response.data.message}, redirecting to login page`);
+        setTimeout(() => {
+          navigate('/login');  
+        }, 5000);              
+      }else{
+        toast.error(`system error: ${error.response.data.message}`);
+      }
     })
   };
 
