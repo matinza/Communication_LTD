@@ -13,7 +13,6 @@ const System = () => {
     phone: '',
     address: '',
   });
-  const [newCustomerName, setNewCustomerName] = useState('');
   const navigate = useNavigate();
 
   const handleChange = (event) => {
@@ -22,13 +21,11 @@ const System = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const { firstName, lastName } = formData;
-    setNewCustomerName(`${firstName} ${lastName}`);
-    
+        
     //Get the token
     const token = localStorage.getItem('token');
 
-    axios.post('https://localhost:4000/system', formData, {
+    axios.post('https://localhost:4000/system/addClients', formData, {
       withCredentials: true,
       headers: {
         Authorization: `Bearer ${token}`,
@@ -109,12 +106,6 @@ const System = () => {
         <button type="submit">Add client</button>
         <ToastContainer />
       </form>
-      {newCustomerName && (
-        <div className="customer-name">
-          <h3>New Customer Name:</h3>
-          <p>{newCustomerName}</p>
-        </div>
-      )}
     </div>
   );
 };
