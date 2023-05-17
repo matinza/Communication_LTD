@@ -1,9 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../../db');
-const config = require('../../config/index');
+const db = require('../db');
 
-router.post('/addClients', (req, res) => {
+router.post('/', (req, res) => {
   const { firstName, lastName, email, phone, address } = req.body;
 
   // Insert the form data into the clients table

@@ -13,6 +13,7 @@ const System = () => {
     phone: '',
     address: '',
   });
+  const [clients, setClients] = useState([]);
   const navigate = useNavigate();
 
   const handleChange = (event) => {
@@ -21,11 +22,11 @@ const System = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-        
+
     //Get the token
     const token = localStorage.getItem('token');
 
-    axios.post('https://localhost:4000/system/addClients', formData, {
+    axios.post('https://localhost:4000/systemAddClient', formData, {
       withCredentials: true,
       headers: {
         Authorization: `Bearer ${token}`,
@@ -43,6 +44,32 @@ const System = () => {
         toast.error(`system error: ${error.response.data.message}`);
       }
     })
+  };
+
+  const handleGetClients = () => {
+    //Get the token
+    const token = localStorage.getItem('token');
+
+    axios.get('https://localhost:4000/systemGetClients', {
+      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json;charset=UTF-8'
+      },
+    })
+    .then(response => {
+        setClients(response.data.clients);
+      })
+    .catch(error => {
+        if(error.response.data.message === "Invalid or expired token"){
+          toast.error(`system error: ${error.response.data.message}, redirecting to login page`);
+          setTimeout(() => {
+            navigate('/login');  
+          }, 5000);              
+        }else{
+          toast.error(`system error: ${error.response.data.message}`);
+        }
+      });
   };
 
   return (
@@ -106,6 +133,15 @@ const System = () => {
         <button type="submit">Add client</button>
         <ToastContainer />
       </form>
+      <div className="clients-list">
+        <h2>All Clients</h2>
+        <button onClick={handleGetClients}>Get Clients</button>
+        <ul>
+          {clients.map(client => (
+            <li key={client.id}>{client.firstName} {client.lastName} - {client.email}</li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };

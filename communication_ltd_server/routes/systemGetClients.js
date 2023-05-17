@@ -1,15 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../../db');
-const config = require('../../config/index');
+const db = require('../db');
 
-router.post('/getClients', (req, res) => {
-  db.query(
-      'select * from clients'
-    )
+router.get('/', (req, res) => {
+  db.query('SELECT * FROM clients')
     .then((result) => {
       res.status(200).json({
-        message: 'New client added successfully'
+        clients: result.rows
       });
     })
     .catch((error) => {

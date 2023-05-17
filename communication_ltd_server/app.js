@@ -6,8 +6,8 @@ const {
 } = require('./jwt/index')
 const registerRoute = require('./routes/register');
 const loginRoute = require('./routes/login');
-const addClientsRoute = require('./routes/system/addClients');
-const getClientsRoute = require('./routes/system/getClients');
+const systemAddClientsRoute = require('./routes/systemAddClients');
+const systemGetClientsRoute = require('./routes/systemGetClients');
 
 const app = express();
 
@@ -28,7 +28,7 @@ db.connectCommunication_LTD_DB();
 
 app.use('/register', registerRoute)
 app.use('/login', loginRoute)
-app.use('/system', verifyToken ,addClientsRoute)
-app.use('/system', verifyToken ,getClientsRoute)
+app.use("/systemAddClient", verifyToken, systemAddClientsRoute);
+app.use("/systemGetClients", verifyToken, systemGetClientsRoute);
 
 module.exports = app;

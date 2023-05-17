@@ -21,7 +21,7 @@ verifyToken = (req, res, next) => {
 
   if (!authHeader) {
     return res.status(401).json({
-      error: 'Missing authorization header'
+      message: 'Missing authorization header'
     })
   }
 
@@ -32,9 +32,10 @@ verifyToken = (req, res, next) => {
       return res.status(401).json({
         message: 'Invalid or expired token'
       })
-    }else{}
-    req.user = decodedToken
-    next()
+    } else {
+      req.user = decodedToken
+      next()
+    }
   })
 }
 
