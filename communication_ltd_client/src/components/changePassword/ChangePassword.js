@@ -1,12 +1,19 @@
 import React, { useState } from 'react';
 import './ChangePassword.css';
+import { useNavigate } from 'react-router-dom';
 
 const ChangePassword = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     currentPassword: '',
     newPassword: '',
     confirmPassword: '',
   });
+
+  const handleRouting = () => {
+    navigate('/routing');
+  };
 
   const handleChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
@@ -19,6 +26,9 @@ const ChangePassword = () => {
 
   return (
     <form className="change-password-form" onSubmit={handleSubmit}>
+      <button type="button" onClick={handleRouting}>
+          Routing
+      </button>
       <h2>Change Password</h2>
       <div className="form-group">
         <label htmlFor="currentPassword">Current Password</label>
@@ -53,7 +63,7 @@ const ChangePassword = () => {
           required
         />
       </div>
-      <button type="submit">Submit</button>
+      <button type="submit">Submit</button>      
     </form>
   );
 };
