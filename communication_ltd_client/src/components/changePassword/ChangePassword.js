@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import './ChangePassword.css';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ChangePassword = () => {
   const navigate = useNavigate();
@@ -25,21 +28,25 @@ const ChangePassword = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    axios.post('https://localhost:4000/login', formData, {
+    const { password, confirmPassword } = formData;
+    if (password !== confirmPassword) {
+      toast.error('Password and confirm password do not match');
+      return;
+    }
+
+    axios.post('https://localhost:4000/changePassword', formData, {
       withCredentials: true,
       headers: {
         'Content-Type': 'application/json;charset=UTF-8'
-      },
+      }
     }).then(response => {
-      toast.success(`${response.data.message}, redirecting to home page`);
-      saveTokenToLocalStorage(response.data.token);
-
+        toast.success(`${response.data.message}, redirecting to login page`);
         setTimeout(() => {
-          navigate('/home');  
+          navigate('/login');  
         }, 5000);              
     }).catch(error => {
-      console.error('login error', error.response.data.message);
-      toast.error(`login error: ${error.response.data.message}`);
+      console.error('change password error', error.response.data.message);
+      toast.error(`change password error: ${error.response.data.message}`);
     });
   };
 
@@ -86,6 +93,7 @@ const ChangePassword = () => {
       <button type="button" onClick={handleForgotPassword}>
           Forgot Password
         </button>  
+      <ToastContainer />
     </form>
   );
 };
