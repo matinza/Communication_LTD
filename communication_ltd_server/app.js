@@ -8,6 +8,7 @@ const registerRoute = require('./routes/register');
 const loginRoute = require('./routes/login');
 const systemAddClientsRoute = require('./routes/systemAddClients');
 const systemGetClientsRoute = require('./routes/systemGetClients');
+const changePasswordRoute = require('./routes/changePassword');
 
 const app = express();
 
@@ -30,5 +31,6 @@ app.use('/register', registerRoute)
 app.use('/login', loginRoute)
 app.use("/systemAddClient", verifyToken, systemAddClientsRoute);
 app.use("/systemGetClients", verifyToken, systemGetClientsRoute);
+app.use("/changePassword", verifyToken, changePasswordRoute);
 
 module.exports = app;
