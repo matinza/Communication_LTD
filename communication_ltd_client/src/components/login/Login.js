@@ -25,11 +25,11 @@ const LoginForm = () => {
         'Content-Type': 'application/json;charset=UTF-8'
       },
     }).then(response => {
-      toast.success(`${response.data.message}, redirecting to system page`);
+      toast.success(`${response.data.message}, redirecting to routing page`);
       saveTokenToLocalStorage(response.data.token);
 
         setTimeout(() => {
-          navigate('/system');  
+          navigate('/routing');  
         }, 5000);              
     }).catch(error => {
       console.error('login error', error.response.data.message);
