@@ -11,8 +11,12 @@ const ChangePassword = () => {
     confirmPassword: '',
   });
 
-  const handleRouting = () => {
-    navigate('/routing');
+  const handleHome = () => {
+    navigate('/home');
+  };
+
+  const handleForgotPassword = () => {
+    navigate('/forgotPassword');
   };
 
   const handleChange = (event) => {
@@ -21,13 +25,28 @@ const ChangePassword = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(formData); // Replace with your own change password logic
+    axios.post('https://localhost:4000/login', formData, {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8'
+      },
+    }).then(response => {
+      toast.success(`${response.data.message}, redirecting to home page`);
+      saveTokenToLocalStorage(response.data.token);
+
+        setTimeout(() => {
+          navigate('/home');  
+        }, 5000);              
+    }).catch(error => {
+      console.error('login error', error.response.data.message);
+      toast.error(`login error: ${error.response.data.message}`);
+    });
   };
 
   return (
     <form className="change-password-form" onSubmit={handleSubmit}>
-      <button type="button" onClick={handleRouting}>
-          Routing
+      <button type="button" onClick={handleHome}>
+          Home
       </button>
       <h2>Change Password</h2>
       <div className="form-group">
@@ -63,7 +82,10 @@ const ChangePassword = () => {
           required
         />
       </div>
-      <button type="submit">Submit</button>      
+      <button type="submit">Submit</button>    
+      <button type="button" onClick={handleForgotPassword}>
+          Forgot Password
+        </button>  
     </form>
   );
 };

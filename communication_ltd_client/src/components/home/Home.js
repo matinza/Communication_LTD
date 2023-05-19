@@ -1,8 +1,8 @@
 import React from 'react';
-import './Routing.css';
+import './Home.css';
 import { useNavigate } from 'react-router-dom';
 
-const Routing = () => {
+const Home = () => {
   const navigate = useNavigate();
 
   const handleSystemClick = () => {
@@ -25,4 +25,4 @@ const Routing = () => {
   );
 };
 
-export default Routing;
+export default Home;

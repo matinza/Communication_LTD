@@ -17,8 +17,8 @@ const System = () => {
   const [showTable, setShowTable] = useState(false);
   const navigate = useNavigate();
 
-  const handleRouting = () => {
-    navigate('/routing');
+  const handleHome = () => {
+    navigate('/home');
   };
 
   const handleChange = (event) => {
@@ -86,8 +86,8 @@ const System = () => {
 
   return (
     <div className="system-screen">
-      <button type="button" onClick={handleRouting}>
-          Routing
+      <button type="button" onClick={handleHome}>
+          Home
       </button>
       <h2>Enter New Customer Details</h2>
       <form className="customer-form" onSubmit={handleSubmit}>
