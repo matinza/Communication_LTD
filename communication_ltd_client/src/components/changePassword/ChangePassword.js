@@ -28,15 +28,17 @@ const ChangePassword = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const { password, confirmPassword } = formData;
-    if (password !== confirmPassword) {
+    const { newPassword, confirmPassword } = formData;
+    if (newPassword !== confirmPassword) {
       toast.error('Password and confirm password do not match');
       return;
     }
 
+    const token = localStorage.getItem('token');
     axios.post('https://localhost:4000/changePassword', formData, {
       withCredentials: true,
       headers: {
+        Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json;charset=UTF-8'
       }
     }).then(response => {

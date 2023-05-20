@@ -19,31 +19,21 @@ router.post('/', (req, res) => {
     newPassword
   } = req.body;
 
-  const email = req.user.email
+  const email = req.user.userEmail
 
-  db.query('SELECT * FROM users WHERE email = $1', [email])
+  db.query(`SELECT * FROM users WHERE email = $1`, [email])
     .then((result) => {
       if (result.rows.length === 0) {
         throw new Error("Internal server error")
       }
+      return result.rows[0]
     })
     .then((result) => {
-      const user = result.rows[0];
+      const user = result;
       const {
         salt,
         password: db_hashedPassword,
       } = user;
-
-      const current_hmac = crypto.createHmac('sha512', salt);
-      current_hmac.update(currentPassword);
-      const hashedCurrentPassword = hmac.digest('hex');
-
-      // Compare the hashed current password with the stored hashed password
-      if (hashedCurrentPassword !== db_hashedPassword) {
-        return res.status(401).json({
-          message: 'Password is wrong'
-        });
-      }
 
       // Validate password complexity
       const passwordLength = config.passwordLength;
@@ -91,20 +81,31 @@ router.post('/', (req, res) => {
         });
       }
       
+      let hmac = crypto.createHmac('sha512', salt);
+      hmac.update(currentPassword);
+      const hashedCurrentPassword = hmac.digest('hex');
+
+      // Compare the hashed current password with the stored hashed password
+      if (hashedCurrentPassword !== db_hashedPassword) {
+        return res.status(401).json({
+          message: 'Password is wrong'
+        });
+      }
+
       // Generate salt for password hashing
-      const generateSalt = crypto.randomBytes(16).toString('hex');
+      const new_salt = crypto.randomBytes(16).toString('hex');
 
       // Hash password with HMAC + salt
-      const hmac = crypto.createHmac('sha512', salt);
+      hmac = crypto.createHmac('sha512', new_salt);
       hmac.update(newPassword);
-      const hashedPassword = hmac.digest('hex');
+      const hashedNewPassword = hmac.digest('hex');
 
       // update password
       db.query(`UPDATE users SET           
             password = $2,
             salt = $3
             WHERE email = $1`,
-          [email, hashedPassword, salt])
+          [email, hashedNewPassword, new_salt])
         .then(() => {
           // Send confirmation email
           const transporter = nodemailer.createTransport(config.emailTransport);
