@@ -19,29 +19,47 @@ router.post('/', (req, res) => {
     newPassword
   } = req.body;
 
-  // Check if user already exists
-  db.query('SELECT * FROM users WHERE email = $1', [req.user.email])
+  const email = req.user.email
+
+  db.query('SELECT * FROM users WHERE email = $1', [email])
     .then((result) => {
       if (result.rows.length === 0) {
         throw new Error("Internal server error")
       }
     })
-    .then(() => {
+    .then((result) => {
+      const user = result.rows[0];
+      const {
+        salt,
+        password: db_hashedPassword,
+      } = user;
+
+      const current_hmac = crypto.createHmac('sha512', salt);
+      current_hmac.update(currentPassword);
+      const hashedCurrentPassword = hmac.digest('hex');
+
+      // Compare the hashed current password with the stored hashed password
+      if (hashedCurrentPassword !== db_hashedPassword) {
+        return res.status(401).json({
+          message: 'Password is wrong'
+        });
+      }
+
       // Validate password complexity
       const passwordLength = config.passwordLength;
       const passwordComplexity = config.passwordComplexity;
       const passwordDictionary = config.passwordDictionary;
 
-      if (currentPassword.length < passwordLength) {
+      if (newPassword.length < passwordLength) {
         return res.status(400).json({
           message: `Password must be at least ${passwordLength} characters long`
         });
       }
 
-      const hasUppercase = /[A-Z]/.test(currentPassword);
-      const hasLowercase = /[a-z]/.test(currentPassword);
-      const hasNumber = /[0-9]/.test(currentPassword);
-      const hasSpecialChar = /[!@#$%^&*]/.test(currentPassword);
+      const hasUppercase = /[A-Z]/.test(newPassword);
+      const hasLowercase = /[a-z]/.test(newPassword);
+      const hasNumber = /[0-9]/.test(newPassword);
+      const hasSpecialChar = /[!@#$%^&*]/.test(newPassword);
 
       if (passwordComplexity.uppercase && !hasUppercase) {
         return res.status(400).json({
@@ -67,37 +85,34 @@ router.post('/', (req, res) => {
         });
       }
 
-      if (passwordDictionary.some((word) => currentPassword.toLowerCase().includes(word))) {
+      if (passwordDictionary.some((word) => newPassword.toLowerCase().includes(word))) {
         return res.status(400).json({
           message: 'Password cannot contain commonly used words'
         });
       }
       
       // Generate salt for password hashing
-      const salt = crypto.randomBytes(16).toString('hex');
+      const generateSalt = crypto.randomBytes(16).toString('hex');
 
       // Hash password with HMAC + salt
       const hmac = crypto.createHmac('sha512', salt);
-      hmac.update(currentPassword);
+      hmac.update(newPassword);
       const hashedPassword = hmac.digest('hex');
 
       // update password
-      db.query(`INSERT INTO users
-           (first_name,
-            last_name,
-            email,
-            password,
-            salt) VALUES
-            ($1, $2, $3, $4, $5)`,
-          [firstName, lastName, email, hashedPassword, salt])
+      db.query(`UPDATE users SET           
+            password = $2,
+            salt = $3
+            WHERE email = $1`,
+          [email, hashedPassword, salt])
         .then(() => {
           // Send confirmation email
           const transporter = nodemailer.createTransport(config.emailTransport);
           const mailOptions = {
             from: config.emailFrom,
             to: email,
-            subject: 'Welcome to our app!',
-            text: 'Thank you for registering.'
+            subject: 'Changed Password Successfuly!',
+            text: 'You changed your password successfuly!'
           };
           transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
