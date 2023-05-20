@@ -4,6 +4,7 @@ const db = require('../db');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const config = require('../config/index');
+const moment = require('moment');
 
 // Email validation regular expression
 // The email address can contain alphanumeric characters, special characters (.!#$%&'*+/=?^_{|}~-), and dots (.`) within the local part.
@@ -33,8 +34,31 @@ router.post('/', (req, res) => {
       const {
         salt,
         password: db_hashedPassword,
+        login_attempts,
+        last_login_attempt
       } = user;
 
+      // Check if the user has exceeded the maximum login attempts
+      if (login_attempts >= config.loginAttempts) {
+        // Calculate the time difference in minutes
+        const now = moment();
+        const lastAttemptTime = moment(last_login_attempt, 'YYYY-MM-DD HH:mm:ss');
+        const diffInMinutes = moment.duration(now.diff(lastAttemptTime)).asMinutes();
+
+        // Check if the time difference is less than 30 minutes
+        if (diffInMinutes < 30) {
+          return res.status(401).json({
+            message: 'Maximum attempts exceeded. Please try again later.'
+          });
+        } else {
+          // Reset the login_attempts field and update the last_login_attempt field
+          db.query('UPDATE users SET login_attempts = 0, last_login_attempt = $1 WHERE email = $2', [now, email])
+            .catch((error) => {
+              console.error('Database error:', error);
+            });
+        }
+      }
+      
       // Validate password complexity
       const passwordLength = config.passwordLength;
       const passwordComplexity = config.passwordComplexity;
@@ -87,10 +111,22 @@ router.post('/', (req, res) => {
 
       // Compare the hashed current password with the stored hashed password
       if (hashedCurrentPassword !== db_hashedPassword) {
+        const now = moment().format('YYYY-MM-DD HH:mm:ss');
+        db.query('UPDATE users SET login_attempts = $1, last_login_attempt = $2 WHERE email = $3', [login_attempts + 1, now, email])
+          .catch((error) => {
+            console.error('Database error:', error);
+          });
         return res.status(401).json({
           message: 'Password is wrong'
         });
       }
+
+      // Password is correct, reset the login_attempts field to 0 and update the last_login_attempt field
+      const now = moment().format('YYYY-MM-DD HH:mm:ss');
+      db.query('UPDATE users SET login_attempts = 0, last_login_attempt = $1 WHERE email = $2', [now, email])
+        .catch((error) => {
+          console.error('Database error:', error);
+        });
 
       // Generate salt for password hashing
       const new_salt = crypto.randomBytes(16).toString('hex');
