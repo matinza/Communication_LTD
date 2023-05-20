@@ -19,7 +19,21 @@ const ForgotPassword = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(formData); // Replace with your own forget password logic
+    
+    axios.post('https://localhost:4000/forgotPassword', formData, {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8'
+      }
+    }).then(response => {
+        toast.success(`redirecting to change password page, use the value from your email as your current password`);
+        setTimeout(() => {
+          navigate('/changePassword');  
+        }, 5000);              
+    }).catch(error => {
+      console.error('forgot password error', error.response.data.message);
+      toast.error(`forgot password error: ${error.response.data.message}`);
+    });
   };
 
   return (

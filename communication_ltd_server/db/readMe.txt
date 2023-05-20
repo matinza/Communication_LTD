@@ -17,6 +17,11 @@ ALTER TABLE users ADD COLUMN login_attempts INTEGER DEFAULT 0;
 -- add last login attempt time to users table
 ALTER TABLE users ADD COLUMN last_login_attempt timestamp;
 
+-- add resetPasswordToken & resetPasswordExpires for forgot password
+ALTER TABLE users
+ADD COLUMN resetPasswordToken TEXT,
+ADD COLUMN resetPasswordExpires TIMESTAMP;
+
 -- create  new table of clients
 CREATE TABLE clients (
   id SERIAL PRIMARY KEY,
