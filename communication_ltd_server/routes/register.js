@@ -96,15 +96,22 @@ router.post('/', (req, res) => {
       hmac.update(password);
       const hashedPassword = hmac.digest('hex');
 
+      // Prepare password history
+      const passwordHistory = [{password: hashedPassword, salt: salt}];
+
       // Store user in database
       db.query(`INSERT INTO users
            (first_name,
             last_name,
             email,
             password,
-            salt) VALUES
-            ($1, $2, $3, $4, $5)`,
-          [firstName, lastName, email, hashedPassword, salt])
+            salt,
+            login_attempts,
+            last_login_attempt,
+            reset_password_token,
+            password_history) VALUES
+            ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+          [firstName, lastName, email, hashedPassword, salt, 0, null, '', passwordHistory])
         .then(() => {
           // Send confirmation email
           const transporter = nodemailer.createTransport(config.emailTransport);
