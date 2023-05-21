@@ -11,7 +11,7 @@ router.post('/', (req, res) => {
     currentPassword,
     newPassword
   } = req.body;
-  
+
   const email = req.user.userEmail
 
   db.query(`SELECT * FROM users WHERE email = $1`, [email])
@@ -26,6 +26,8 @@ router.post('/', (req, res) => {
       const {
         salt,
         password: db_hashedPassword,
+        reset_password_token,
+        reset_password_expires,
         login_attempts,
         last_login_attempt
       } = user;
@@ -50,7 +52,7 @@ router.post('/', (req, res) => {
             });
         }
       }
-      
+
       // Validate password complexity
       const passwordLength = config.passwordLength;
       const passwordComplexity = config.passwordComplexity;
@@ -96,21 +98,43 @@ router.post('/', (req, res) => {
           message: 'Password cannot contain commonly used words'
         });
       }
+
       
+
+      const reset_token_now = moment();
+      const lastResetTime = moment(reset_password_expires, 'YYYY-MM-DD HH:mm:ss');
+      const diffInMinutes = moment.duration(reset_token_now.diff(lastResetTime)).asMinutes();
+      
+      let lessThan30Minutes = false      
+      if (diffInMinutes < 30) {
+        lessThan30Minutes = true
+      }
+
+      // Check validataion of the current password & expiration
+      const isResetTokenValid = currentPassword === reset_password_token && lessThan30Minutes;
+
       let hmac = crypto.createHmac('sha512', salt);
       hmac.update(currentPassword);
       const hashedCurrentPassword = hmac.digest('hex');
 
       // Compare the hashed current password with the stored hashed password
-      if (hashedCurrentPassword !== db_hashedPassword) {
+      if (hashedCurrentPassword !== db_hashedPassword && !isResetTokenValid) {
         const now = moment().format('YYYY-MM-DD HH:mm:ss');
         db.query('UPDATE users SET login_attempts = $1, last_login_attempt = $2 WHERE email = $3', [login_attempts + 1, now, email])
           .catch((error) => {
             console.error('Database error:', error);
           });
         return res.status(401).json({
-          message: 'Password is wrong'
+          message: 'Password is wrong and no valid reset token provided'
         });
+      }
+
+      // If the reset token was used, clear it from the database
+      if (isResetTokenValid) {
+        db.query('UPDATE users SET reset_password_token = null, reset_password_expires = null WHERE email = $1', [email])
+          .catch((error) => {
+            console.error('Database error:', error);
+          });
       }
 
       // Password is correct, reset the login_attempts field to 0 and update the last_login_attempt field
