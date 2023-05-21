@@ -29,7 +29,8 @@ router.post('/', (req, res) => {
         reset_password_token,
         reset_password_expires,
         login_attempts,
-        last_login_attempt
+        last_login_attempt,
+        password_history
       } = user;
 
       // Check if the user has exceeded the maximum login attempts
@@ -99,13 +100,13 @@ router.post('/', (req, res) => {
         });
       }
 
-      
+
 
       const reset_token_now = moment();
       const lastResetTime = moment(reset_password_expires, 'YYYY-MM-DD HH:mm:ss');
       const diffInMinutes = moment.duration(reset_token_now.diff(lastResetTime)).asMinutes();
-      
-      let lessThan30Minutes = false      
+
+      let lessThan30Minutes = false
       if (diffInMinutes < 30) {
         lessThan30Minutes = true
       }
@@ -152,12 +153,39 @@ router.post('/', (req, res) => {
       hmac.update(newPassword);
       const hashedNewPassword = hmac.digest('hex');
 
+      // // Check password history
+      // for (let element of password_history) {
+      //   let converted_value = JSON.parse(element);
+      //   hmac = crypto.createHmac('sha512', converted_value.salt);
+      //   hmac.update(newPassword); // Updated to newPassword
+      //   let hashedNewPasswordWithOldSalt = hmac.digest('hex');
+
+      //   if (hashedNewPasswordWithOldSalt === converted_value.password) { // Updated to converted_value.password
+      //     return res.status(400).json({
+      //       message: 'New password cannot be the same as a previously used password'
+      //     });
+      //   }
+      // }
+
+      // // Check if there are more than the forbidden passwords in the config
+      // if (password_history.length >= config.passwordHistory) {
+      //   // Remove the oldest password
+      //   password_history.shift();
+      // }
+
+      // const passwordHistory = [{
+      //   password: hashedNewPassword,
+      //   salt: new_salt
+      // }];
+      // password_history.push(passwordHistory)
+
       // update password
       db.query(`UPDATE users SET           
             password = $2,
-            salt = $3
+            salt = $3,
+            password_history = $4
             WHERE email = $1`,
-          [email, hashedNewPassword, new_salt])
+          [email, hashedNewPassword, new_salt, ['']])
         .then(() => {
           // Send confirmation email
           const transporter = nodemailer.createTransport(config.emailTransport);
