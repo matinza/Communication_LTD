@@ -19,8 +19,8 @@ ALTER TABLE users ADD COLUMN last_login_attempt timestamp;
 
 -- add resetPasswordToken & resetPasswordExpires for forgot password
 ALTER TABLE users
-ADD COLUMN resetPasswordToken TEXT,
-ADD COLUMN resetPasswordExpires TIMESTAMP;
+ADD COLUMN reset_password_token TEXT DEFAULT '',
+ADD COLUMN reset_password_expires TIMESTAMP;
 
 -- create  new table of clients
 CREATE TABLE clients (

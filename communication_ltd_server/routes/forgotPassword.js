@@ -32,6 +32,12 @@ router.post('/', (req, res) => {
       }
 
       generateAccessToken(payload).then((token) => {
+        const now = moment().format('YYYY-MM-DD HH:mm:ss');
+        db.query('UPDATE users SET reset_password_token = $1, reset_password_expires = $2 WHERE email = $3', [token, now, email])
+        .catch((error) => {
+          console.error('Database error:', error);
+        });
+
         // Send confirmation email
         const transporter = nodemailer.createTransport(config.emailTransport);
         const mailOptions = {
