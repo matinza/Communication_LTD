@@ -11,7 +11,7 @@ router.post('/', (req, res) => {
     currentPassword,
     newPassword
   } = req.body;
-
+  
   const email = req.user.userEmail
 
   db.query(`SELECT * FROM users WHERE email = $1`, [email])
@@ -164,8 +164,9 @@ router.post('/', (req, res) => {
         })
     })
     .catch((error) => {
-      return res.status(400).json({
-        message: error.message
+      console.log(error.message);
+      return res.status(500).json({
+        message: 'Internal server message'
       })
     })
 });

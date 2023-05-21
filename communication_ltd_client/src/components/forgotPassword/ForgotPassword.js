@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import './ForgotPassword.css';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
 
 const ForgotPassword = () => {
   const [formData, setFormData] = useState({
@@ -24,17 +26,12 @@ const ForgotPassword = () => {
       withCredentials: true,
       headers: {
         'Content-Type': 'application/json;charset=UTF-8'
-      }
-    }).then(response => {
-        toast.success(`redirecting to change password page, use the value from your email as your current password`);
-        setTimeout(() => {
-          navigate('/changePassword');  
-        }, 5000);              
-    }).catch(error => {
-      console.error('forgot password error', error.response.data.message);
-      toast.error(`forgot password error: ${error.response.data.message}`);
-    });
-  };
+      }})
+    toast.success(`redirecting to change password page, use the value from your email as your current password`);
+    setTimeout(() => {
+      navigate('/changePassword');  
+    }, 5000)
+  }
 
   return (
     <form className="forget-password-form" onSubmit={handleSubmit}>
@@ -54,6 +51,7 @@ const ForgotPassword = () => {
         />
       </div>
       <button type="submit">Submit</button>
+      <ToastContainer />
     </form>
   );
 };
