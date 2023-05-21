@@ -22,6 +22,10 @@ ALTER TABLE users
 ADD COLUMN reset_password_token TEXT DEFAULT '',
 ADD COLUMN reset_password_expires TIMESTAMP;
 
+-- add password history managemenet
+ALTER TABLE users
+ADD COLUMN password_history TEXT[] DEFAULT ARRAY[]::TEXT[];
+
 -- create  new table of clients
 CREATE TABLE clients (
   id SERIAL PRIMARY KEY,
