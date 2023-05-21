@@ -42,7 +42,7 @@ router.post('/', (req, res) => {
         from: config.emailFrom,
         to: email,
         subject: 'Your new current password',
-        text: token
+        text: sha1Hash
       };
       transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
