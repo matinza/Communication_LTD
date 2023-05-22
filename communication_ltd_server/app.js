@@ -8,6 +8,7 @@ const registerRoute = require('./routes/register');
 const loginRoute = require('./routes/login');
 const systemAddClientsRoute = require('./routes/systemAddClients');
 const systemGetClientsRoute = require('./routes/systemGetClients');
+const systemSearchClientsRoute = require('./routes/systemSearchClients');
 const changePasswordRoute = require('./routes/changePassword');
 const forgotPasswordRoute = require('./routes/forgotPassword');
 
@@ -32,6 +33,7 @@ app.use('/register', registerRoute)
 app.use('/login', loginRoute)
 app.use("/systemAddClient", verifyToken, systemAddClientsRoute)
 app.use("/systemGetClients", verifyToken, systemGetClientsRoute)
+app.use("/systemSearchClients/:searchQuery", verifyToken, systemSearchClientsRoute)
 app.use("/changePassword", verifyToken, changePasswordRoute)
 app.use("/forgotPassword", forgotPasswordRoute)
 

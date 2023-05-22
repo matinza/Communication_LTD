@@ -8,8 +8,8 @@ require('dotenv').config()
 const options = {
   // key: fs.readFileSync('./sslcert/server.key'),
   // cert: fs.readFileSync('./sslcert/server.crt')
-  key: fs.readFileSync(path.join(__dirname, 'localhost-key.pem')),
-  cert: fs.readFileSync(path.join(__dirname, 'localhost.pem')),
+  key: fs.readFileSync('localhost-key.pem'),
+  cert: fs.readFileSync('localhost.pem'),
   minVersion: tls.Server.TLSv1_2_method
 };
 const server = https.createServer(options, app);

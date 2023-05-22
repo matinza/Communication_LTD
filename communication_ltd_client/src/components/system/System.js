@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
@@ -15,8 +15,13 @@ const System = () => {
   });
   const [clients, setClients] = useState([]);
   const [showTable, setShowTable] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
 
+  useEffect(() => {
+    handleGetClients()
+  }, [])
+  
   const handleHome = () => {
     navigate('/home');
   };
@@ -79,9 +84,40 @@ const System = () => {
         }
       });
   };
+  
+  
+  const handleSearch = () => {
+    const token = localStorage.getItem('token');
+
+    axios.put(`https://localhost:4000/systemSearchClients/${searchQuery}`, {
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+      })
+      .then((response) => {
+        setClients(response.data.clients);
+        setShowTable(true);
+      })
+      .catch((error) => {
+        if (error.response.data.message === 'Invalid or expired token') {
+          toast.error(`system error: ${error.response.data.message}, redirecting to login page`);
+          setTimeout(() => {
+            navigate('/login');
+          }, 5000);
+        } else {
+          toast.error(`system error: ${error.response.data.message}`);
+        }
+      });
+  };
 
   const handleToggleTable = () => {
     setShowTable(!showTable);
+  };
+
+  const handleSearchQueryChange = (event) => {
+    setSearchQuery(event.target.value);
   };
 
   return (
@@ -149,7 +185,18 @@ const System = () => {
         <ToastContainer />
       </form>
       <div className="clients-list">
-        <button className="Get-Clients-Button" onClick={handleGetClients}>Get Clients</button>
+        <button className="Get-Clients-Button" onClick={handleGetClients}>Get all Clients</button>
+        <div className="search-container">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={handleSearchQueryChange}
+            placeholder="Search clients"
+          />
+          <button className="search-button" onClick={handleSearch}>
+            Search
+          </button>
+        </div>
         {showTable && (
           <div className="table-container">
             <button className="close-button" onClick={handleToggleTable}>
