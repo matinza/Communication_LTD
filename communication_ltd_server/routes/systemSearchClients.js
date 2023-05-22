@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 
-router.put('/:searchQuery', (req, res) => {
-  console.log('here');
-  const { searchQuery } = req.params;
+router.patch('/', (req, res) => {
+  const { searchQuery } = req.body;
+
   console.log(searchQuery);
   db.query(`SELECT *
             FROM clients

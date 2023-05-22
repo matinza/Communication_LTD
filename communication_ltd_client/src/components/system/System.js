@@ -86,10 +86,11 @@ const System = () => {
   };
   
   
-  const handleSearch = () => {
+  const handleSearch = (event) => {
+    event.preventDefault();
     const token = localStorage.getItem('token');
 
-    axios.put(`https://localhost:4000/systemSearchClients/${searchQuery}`, {
+    axios.patch(`https://localhost:4000/systemSearchClients/` , { searchQuery } ,{
         withCredentials: true,
         headers: {
           Authorization: `Bearer ${token}`,

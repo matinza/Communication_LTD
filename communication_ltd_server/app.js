@@ -33,7 +33,7 @@ app.use('/register', registerRoute)
 app.use('/login', loginRoute)
 app.use("/systemAddClient", verifyToken, systemAddClientsRoute)
 app.use("/systemGetClients", verifyToken, systemGetClientsRoute)
-app.use("/systemSearchClients/:searchQuery", verifyToken, systemSearchClientsRoute)
+app.use("/systemSearchClients", verifyToken, systemSearchClientsRoute)
 app.use("/changePassword", verifyToken, changePasswordRoute)
 app.use("/forgotPassword", forgotPasswordRoute)
 
