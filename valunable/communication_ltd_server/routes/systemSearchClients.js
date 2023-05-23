@@ -9,7 +9,7 @@ router.patch('/', (req, res) => {
             FROM clients
             WHERE first_name ILIKE '%${searchQuery}%'
                OR last_name ILIKE '%${searchQuery}%'
-               OR email ILIKE '%${searchQuery}%'`)
+               OR email ILIKE '%${searchQuery}%`)
     .then((result) => {
       res.status(200).json({
         clients: result.rows

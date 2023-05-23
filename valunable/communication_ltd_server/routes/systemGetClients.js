@@ -2,14 +2,8 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 
-router.patch('/', (req, res) => {
-  const { searchQuery } = req.body;
-
-  db.query(`SELECT *
-            FROM clients
-            WHERE first_name ILIKE '%${searchQuery}%'
-               OR last_name ILIKE '%${searchQuery}%'
-               OR email ILIKE '%${searchQuery}%'`)
+router.get('/', (req, res) => {
+  db.query('SELECT * FROM clients')
     .then((result) => {
       res.status(200).json({
         clients: result.rows

@@ -1,19 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
-const { body, validationResult } = require('express-validator');
 
-router.post('/',[
-  body('firstName').trim().escape(),
-  body('lastName').trim().escape(),
-  body('email').trim().escape()
-], (req, res) => {
-
-  // Check for validation errors
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
+router.post('/', (req, res) => {
   const { firstName, lastName, email } = req.body;
 
   // Insert the form data into the clients table

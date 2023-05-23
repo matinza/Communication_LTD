@@ -191,9 +191,9 @@ const System = () => {
               <tbody>
                 {clients.map((client) => (
                   <tr key={client.id}>
-                    <td>{client.first_name}</td>
-                    <td>{client.last_name}</td>
-                    <td>{client.email}</td>
+                    <td dangerouslySetInnerHTML={{ "__html": client.first_name }} />
+                    <td dangerouslySetInnerHTML={{ "__html": client.last_name }} />
+                    <td dangerouslySetInnerHTML={{ "__html": client.email }} />
                   </tr>
                 ))}
               </tbody>
