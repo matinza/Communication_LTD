@@ -9,9 +9,7 @@ const System = () => {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
-    email: '',
-    phone: '',
-    address: '',
+    email: ''
   });
   const [clients, setClients] = useState([]);
   const [showTable, setShowTable] = useState(false);
@@ -160,28 +158,7 @@ const System = () => {
             onChange={handleChange}
             required
           />
-        </div>
-        <div className="form-group">
-          <label htmlFor="phone">Phone</label>
-          <input
-            type="tel"
-            name="phone"
-            id="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="address">Address</label>
-          <textarea
-            name="address"
-            id="address"
-            value={formData.address}
-            onChange={handleChange}
-            required
-          ></textarea>
-        </div>
+        </div>        
         <button type="submit">Add client</button>
         <ToastContainer />
       </form>
@@ -209,18 +186,14 @@ const System = () => {
                   <th>First Name</th>
                   <th>Last Name</th>
                   <th>Email</th>
-                  <th>Phone</th>
-                  <th>Address</th>
                 </tr>
               </thead>
               <tbody>
                 {clients.map((client) => (
                   <tr key={client.id}>
-                    <td>{client.first_name}</td>
-                    <td>{client.last_name}</td>
-                    <td>{client.email}</td>
-                    <td>{client.phone}</td>
-                    <td>{client.address}</td>
+                    <td dangerouslySetInnerHTML={{ "__html": client.first_name }} />
+                    <td dangerouslySetInnerHTML={{ "__html": client.last_name }} />
+                    <td dangerouslySetInnerHTML={{ "__html": client.email }} />
                   </tr>
                 ))}
               </tbody>
