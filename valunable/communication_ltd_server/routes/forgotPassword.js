@@ -11,7 +11,7 @@ router.post('/', (req, res) => {
     email
   } = req.body;
 
-  db.query(`SELECT * FROM users WHERE email = $1`, [email])
+  db.query(`SELECT * FROM users WHERE email = '${email}'`)
     .then((result) => {
       if (result.rows.length === 0) {
         throw new Error("Internal server error")
@@ -31,7 +31,7 @@ router.post('/', (req, res) => {
       const sha1Hash = crypto.createHash('sha1').update(randomValue).digest('hex');
 
       const now = moment().format('YYYY-MM-DD HH:mm:ss');
-      db.query('UPDATE users SET reset_password_token = $1, reset_password_expires = $2 WHERE email = $3', [sha1Hash, now, email])
+      db.query(`UPDATE users SET reset_password_token = '${sha1Hash}', reset_password_expires = '${now}' WHERE email = '${email}'`)
         .catch((error) => {
           console.error('Database error:', error);
         });

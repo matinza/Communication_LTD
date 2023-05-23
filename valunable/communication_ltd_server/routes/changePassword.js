@@ -14,7 +14,7 @@ router.post('/', (req, res) => {
 
   const email = req.user.userEmail
 
-  db.query(`SELECT * FROM users WHERE email = $1`, [email])
+  db.query(`SELECT * FROM users WHERE email = ${email}`)
     .then((result) => {
       if (result.rows.length === 0) {
         throw new Error("Internal server error")
@@ -47,7 +47,7 @@ router.post('/', (req, res) => {
           });
         } else {
           // Reset the login_attempts field and update the last_login_attempt field
-          db.query('UPDATE users SET login_attempts = 0, last_login_attempt = $1 WHERE email = $2', [now, email])
+          db.query(`UPDATE users SET login_attempts = 0, last_login_attempt = '${now}' WHERE email = '${email}'`)
             .catch((error) => {
               console.error('Database error:', error);
             });
@@ -121,7 +121,7 @@ router.post('/', (req, res) => {
       // Compare the hashed current password with the stored hashed password
       if (hashedCurrentPassword !== db_hashedPassword && !isResetTokenValid) {
         const now = moment().format('YYYY-MM-DD HH:mm:ss');
-        db.query('UPDATE users SET login_attempts = $1, last_login_attempt = $2 WHERE email = $3', [login_attempts + 1, now, email])
+        db.query(`UPDATE users SET login_attempts = '${login_attempts + 1}', last_login_attempt = '${now}' WHERE email = '${email}'`)
           .catch((error) => {
             console.error('Database error:', error);
           });
@@ -132,7 +132,7 @@ router.post('/', (req, res) => {
 
       // If the reset token was used, clear it from the database
       if (isResetTokenValid) {
-        db.query('UPDATE users SET reset_password_token = null, reset_password_expires = null WHERE email = $1', [email])
+        db.query(`UPDATE users SET reset_password_token = null, reset_password_expires = null WHERE email = ${email}`)
           .catch((error) => {
             console.error('Database error:', error);
           });
@@ -140,7 +140,7 @@ router.post('/', (req, res) => {
 
       // Password is correct, reset the login_attempts field to 0 and update the last_login_attempt field
       const now = moment().format('YYYY-MM-DD HH:mm:ss');
-      db.query('UPDATE users SET login_attempts = 0, last_login_attempt = $1 WHERE email = $2', [now, email])
+      db.query(`UPDATE users SET login_attempts = 0, last_login_attempt = '${now}' WHERE email = '${email}'`, [now, email])
         .catch((error) => {
           console.error('Database error:', error);
         });
@@ -181,10 +181,10 @@ router.post('/', (req, res) => {
 
       // update password
       db.query(`UPDATE users SET           
-            password = $2,
-            salt = $3,
-            password_history = $4
-            WHERE email = $1`,
+            password = '${hashedNewPassword}',
+            salt = '${new_salt}',
+            password_history = '${password_history}'
+            WHERE email = '${email}'`,
           [email, hashedNewPassword, new_salt, password_history])
         .then(() => {
           // Send confirmation email

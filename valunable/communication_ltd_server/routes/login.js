@@ -34,7 +34,7 @@ router.post('/', (req, res) => {
   }
 
   // Find the user in the database by email
-  db.query('SELECT * FROM users WHERE email = $1', [email])
+  db.query(`SELECT * FROM users WHERE email = '${email}'`)
     .then((result) => {
       // Check if user exists
       if (result.rows.length === 0) {
@@ -66,7 +66,7 @@ router.post('/', (req, res) => {
           });
         } else {
           // Reset the login_attempts field and update the last_login_attempt field
-          db.query('UPDATE users SET login_attempts = 0, last_login_attempt = $1 WHERE email = $2', [now, email])
+          db.query(`UPDATE users SET login_attempts = 0, last_login_attempt = '${now}' WHERE email = '${email}'`)
             .catch((error) => {
               console.error('Database error:', error);
             });
@@ -81,7 +81,7 @@ router.post('/', (req, res) => {
       // Compare the hashed entered password with the stored hashed password
       if (hashedEnteredPassword !== hashedPassword) {
         const now = moment().format('YYYY-MM-DD HH:mm:ss');
-        db.query('UPDATE users SET login_attempts = $1, last_login_attempt = $2 WHERE email = $3', [login_attempts + 1, now, email])
+        db.query(`UPDATE users SET login_attempts = '${login_attempts + 1}', last_login_attempt = '${now}' WHERE email = '${email}'`)
           .catch((error) => {
             console.error('Database error:', error);
           });
@@ -92,7 +92,7 @@ router.post('/', (req, res) => {
 
       // Password is correct, reset the login_attempts field to 0 and update the last_login_attempt field
       const now = moment().format('YYYY-MM-DD HH:mm:ss');
-      db.query('UPDATE users SET login_attempts = 0, last_login_attempt = $1 WHERE email = $2', [now, email])
+      db.query(`UPDATE users SET login_attempts = 0, last_login_attempt = '${now}' WHERE email = '${email}'`)
         .catch((error) => {
           console.error('Database error:', error);
         });

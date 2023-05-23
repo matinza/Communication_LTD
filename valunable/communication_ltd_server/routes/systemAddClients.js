@@ -7,9 +7,7 @@ router.post('/', (req, res) => {
 
   // Insert the form data into the clients table
   db.query(
-    'INSERT INTO clients (first_name, last_name, email) VALUES ($1, $2, $3)',
-    [firstName, lastName, email]
-  )
+    `INSERT INTO clients (first_name, last_name, email) VALUES ('${firstName}', ${lastName}, '${email}')`)
     .then(() => {
       res.status(200).json({
         message: 'New client added successfully'
