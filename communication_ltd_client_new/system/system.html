@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System</title>
+    <link rel="stylesheet" href="system.css">
+</head>
+<body id="system-body" class="system-body">
+    <div class="system-screen">
+      <button id="homeButton" type="button">Home</button>
+      <h2>Enter New Customer Details</h2>
+      <form id="customerForm" class="customer-form">
+        <div class="form-group">
+          <label for="firstName">First Name</label>
+          <input type="text" name="firstName" id="firstName" required>
+        </div>
+        <div class="form-group">
+          <label for="lastName">Last Name</label>
+          <input type="text" name="lastName" id="lastName" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" name="email" id="email" required>
+        </div>
+        <button type="submit">Add client</button>
+      </form>
+      <div class="clients-list">
+        <button id="getClientsButton" class="Get-Clients-Button">Get all Clients</button>
+        <div class="search-container">
+          <input id="searchInput" type="text" placeholder="Search clients">
+          <button id="searchButton" class="search-button">Search</button>
+        </div>
+        <div id="tableContainer" class="table-container" style="display:none;">
+          <button id="toggleTableButton" class="close-button">X</button>
+          <table>
+            <thead>
+              <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+              </tr>
+            </thead>
+            <tbody id="clientsTableBody">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="system.js"></script>
+</body>
+</html>
