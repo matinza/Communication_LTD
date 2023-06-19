@@ -5,8 +5,8 @@ const tls = require('tls');
 const app = require('./app');
 require('dotenv').config()
 
-privateKey =  fs.readFileSync('./sslcert/server.key')
-certificate =  fs.readFileSync('./sslcert/server.crt')
+privateKey =  fs.readFileSync('./security/cert.key')
+certificate =  fs.readFileSync('./security/cert.pem')
 
 const server = https.createServer({
   key: privateKey,

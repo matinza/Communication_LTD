@@ -38,8 +38,13 @@ function handleChange(event, field) {
 
 async function handleSubmit(event) {
   event.preventDefault();
+  const token = localStorage.getItem('token');
   try {
-    await axios.post('https://localhost:4000/systemAddClient', formData);
+    await axios.post('https://localhost:4000/systemAddClient', formData, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
     alert('Client added successfully', true);
   } catch (error) {
     alert('Failed to add client', false);
@@ -47,8 +52,15 @@ async function handleSubmit(event) {
 }
 
 async function handleGetClients() {
+  const token = localStorage.getItem('token');
   try {
-    const response = await axios.get('https://localhost:4000/systemGetClients');
+    const response = await axios.get('https://localhost:4000/systemGetClients', {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+        Authorization: `Bearer ${token}`
+      }
+    });
     clients = response.data;
     if (showTable) {
       displayClients();
@@ -63,8 +75,13 @@ function handleSearchQueryChange(event) {
 }
 
 async function handleSearch() {
+  const token = localStorage.getItem('token');
   try {
-    const response = await axios.get(`https://localhost:4000/systemSearchClients/${searchQuery}`);
+    const response = await axios.get(`https://localhost:4000/systemSearchClients/${searchQuery}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
     clients = response.data;
     displayClients();
   } catch (error) {
@@ -95,4 +112,3 @@ function displayClients() {
   }
   tableContainer.style.display = 'block';
 }
-

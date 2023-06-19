@@ -15,10 +15,10 @@ const app = express();
 app.use(express.json());
 
 const corsOptions = {
-  origin: ["https://localhost:8080", "http://127.0.0.1:8080"],
+  origin: ["https://localhost:8080", "https://127.0.0.1:8080"],
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
-  allowedHeaders: ['Content-Type'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   preflightContinue: false,
   optionsSuccessStatus: 204
 };
