@@ -4,9 +4,9 @@ const db = require('../db');
 const { body, validationResult } = require('express-validator');
 
 router.post('/',[
-  body('firstName').trim().escape(),
-  body('lastName').trim().escape(),
-  body('email').trim().escape()
+  body('firstName').trim(),
+  body('lastName').trim(),
+  body('email').trim()
 ], (req, res) => {
 
   // Check for validation errors

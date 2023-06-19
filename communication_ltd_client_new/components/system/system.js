@@ -61,9 +61,13 @@ async function handleGetClients() {
         Authorization: `Bearer ${token}`
       }
     });
-    clients = response.data;
-    if (showTable) {
-      displayClients();
+    if (Array.isArray(response.data.clients)) {
+      clients = response.data.clients;
+      if (!showTable) {
+        toggleTableButton.click();
+      } else {
+        displayClients();
+      }
     }
   } catch (error) {
     alert('Failed to get clients', false);
@@ -82,8 +86,10 @@ async function handleSearch() {
         Authorization: `Bearer ${token}`
       }
     });
-    clients = response.data;
-    displayClients();
+    if (Array.isArray(response.data)) {
+      clients = response.data;
+      displayClients();
+    }
   } catch (error) {
     alert('Failed to search clients', false);
   }
@@ -101,14 +107,17 @@ function handleToggleTable() {
 
 function displayClients() {
   clientsTableBody.innerHTML = '';
-  for (let client of clients) {
-    const row = document.createElement('tr');
-    for (let field in client) {
-      const cell = document.createElement('td');
-      cell.textContent = client[field];
-      row.appendChild(cell);
+  if (Array.isArray(clients)) {
+    for (let client of clients) {
+      const row = document.createElement('tr');
+      for (let field in client) {
+        const cell = document.createElement('td');
+        cell.textContent = client[field]; // This is unsafe!
+        row.appendChild(cell);
+      }
+      clientsTableBody.appendChild(row);
     }
-    clientsTableBody.appendChild(row);
+    tableContainer.style.display = 'block';
   }
-  tableContainer.style.display = 'block';
 }
+
