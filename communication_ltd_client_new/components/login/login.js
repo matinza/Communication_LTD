@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
             saveTokenToLocalStorage(response.data.token);
 
             setTimeout(function () {
-                window.location.href = 'http://172.29.96.1:8080/home/home.html';
+                window.location.href = 'https://localhost:8080/home/home.html';
             }, 5000);
         }).catch(function (error) {
             console.error('login error', error.response.data.message);
@@ -32,11 +32,11 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     registerButton.addEventListener('click', function () {
-        window.location.href = 'http://172.29.96.1:8080/register/register.html';
+        window.location.href = 'https://localhost:8080/register/register.html';
     });
 
     forgotPasswordButton.addEventListener('click', function () {
-        window.location.href = 'http://172.29.96.1:8080/forgotPassword/forgotPassword.html';
+        window.location.href = 'https://localhost:8080/forgotPassword/forgotPassword.html';
     });
 });
 

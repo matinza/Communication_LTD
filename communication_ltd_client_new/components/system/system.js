@@ -30,7 +30,7 @@ searchButton.addEventListener('click', handleSearch);
 toggleTableButton.addEventListener('click', handleToggleTable);
 
 window.addEventListener('load', handleGetClients);
-homeButton.addEventListener('click', () => window.location.href = 'http://172.29.96.1:8080/home/home.html');
+homeButton.addEventListener('click', () => window.location.href = 'https://localhost:8080/home/home.html');
 
 function handleChange(event, field) {
   formData[field] = event.target.value;

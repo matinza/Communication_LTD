@@ -7,11 +7,11 @@ document.addEventListener('DOMContentLoaded', function () {
   var forgotPasswordButton = document.getElementById('forgotPasswordButton');
 
   homeButton.addEventListener('click', function () {
-    window.location.href = 'http://172.29.96.1:8080/home/home.html';
+    window.location.href = 'https://localhost:8080/home/home.html';
   });
 
   forgotPasswordButton.addEventListener('click', function () {
-    window.location.href = 'http://172.29.96.1:8080/forgotPassword/forgotPassword.html';
+    window.location.href = 'https://localhost:8080/forgotPassword/forgotPassword.html';
   });
 
   submitButton.addEventListener('click', function (event) {
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
     .then(data => {
       alert(`${data.message}, redirecting to login page`);
       setTimeout(() => {
-        window.location.href = 'http://172.29.96.1:8080/login/login.html';
+        window.location.href = 'https://localhost:8080/login/login.html';
       }, 5000);
     })
     .catch(error => {

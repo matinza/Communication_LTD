@@ -34,7 +34,7 @@ const handleSubmit = (event) => {
   }).then(response => {
       alert(response.data.message + ', redirecting to login page', true);
       setTimeout(() => {
-        window.location.href = 'http://172.29.96.1:8080/login/login.html';  
+        window.location.href = 'https://localhost:8080/login/login.html';  
       }, 5000);              
   }).catch(error => {
     console.error('Registration error', error.response.data.message);
@@ -43,7 +43,7 @@ const handleSubmit = (event) => {
 };
 
 const handleLogin = () => {
-  window.location.href = 'http://172.29.96.1:8080/login/login.html';  
+  window.location.href = 'https://localhost:8080/login/login.html';  
 };
 
 firstNameInput.addEventListener('input', (event) => handleChange(event, 'firstName'));
