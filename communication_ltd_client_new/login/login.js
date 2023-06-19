@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
           saveTokenToLocalStorage(response.data.token);
 
           setTimeout(function () {
-              window.location.href = '/home'; // navigating to home page
+              window.location.href = 'D:\\git\\Communication_LTD\\communication_ltd_client_new\\home\\home.html'; // navigating to home page
           }, 5000);
       }).catch(function (error) {
           console.error('login error', error.response.data.message);
@@ -28,12 +28,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
   var registerButton = document.getElementById('register');
   registerButton.addEventListener('click', function () {
-      window.location.href = '/register';
+      window.location.href = 'D:\\git\\Communication_LTD\\communication_ltd_client_new\\register\\register.html';
   });
 
   var forgotPasswordButton = document.getElementById('forgotPassword');
   forgotPasswordButton.addEventListener('click', function () {
-      window.location.href = '/forgotPassword';
+      window.location.href = 'D:\\git\\Communication_LTD\\communication_ltd_client_new\\forgotPassword\\forgotPassword.html';
   });
 });
 

@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', function () {
-  var homeButton = document.getElementById('homeButton');
+  var LoginButton = document.getElementById('LoginButton');
   var emailInput = document.getElementById('email');
   var submitButton = document.getElementById('submitButton');
 
-  homeButton.addEventListener('click', function () {
-    window.location.href = '/home';
+  LoginButton.addEventListener('click', function () {
+    window.location.href = 'D:\\git\\Communication_LTD\\communication_ltd_client_new\\login\\login.html';
   });
 
   submitButton.addEventListener('click', function (event) {
@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
     .then(() => {
       alert('Redirecting to change password page, use the value from your email as your current password');
       setTimeout(() => {
-        window.location.href = '/changePassword';
+        window.location.href = 'D:\\git\\Communication_LTD\\communication_ltd_client_new\\changePassword\\changePassword.html';
       }, 5000);
     })
     .catch((err) => console.log(err));

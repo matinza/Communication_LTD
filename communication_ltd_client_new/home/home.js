@@ -3,10 +3,10 @@ document.addEventListener('DOMContentLoaded', function () {
   var changePasswordButton = document.getElementById('changePasswordButton');
 
   systemButton.addEventListener('click', function () {
-    window.location.href = '/system';
+    window.location.href = 'D:\\git\\Communication_LTD\\communication_ltd_client_new\\system\\system.html';
   });
 
   changePasswordButton.addEventListener('click', function () {
-    window.location.href = '/changePassword';
+    window.location.href = 'D:\\git\\Communication_LTD\\communication_ltd_client_new\\changePassword\\changePassword.html';
   });
 });
